@@ -1,4 +1,4 @@
-# Selection Sort Without Loops, Recursion or goto
+# Selection Sort Without Loops, Recursion or goto: The Complete Journey
 
 **Name:** Aouine Nasim   **Course:** ASD3   **Teacher:** L. Lamiche   **Date:** 24/10/2026
 
@@ -6,87 +6,95 @@
 
 ### Navigation: Click any blue link to view its file
 
-## 1. The Problem
-A detailed description of the challenge is in [The Problem](file:///home/wsm/Desktop/Selection%20Sort%20Project/1%20-%20The%20Problem.md).
-The task is to implement **Selection Sort** with:
-- **No loops** (`for`, `while`, `do-while`)
-- **No recursion** (direct or indirect)
-- **No `goto`**
-- Variable array size $N$ known only at runtime.
-- **Hint:** The algorithm relies on **booleans**.
+## 1. The Problem & Challenge
+The assignment given by the teacher:
+- Write **Selection Sort** in C++ / C / Pseudo-code.
+- **Constraints:** No loops (`for`, `while`, `do-while`), no recursion, no `goto`.
+- **Runtime size $N$:** The algorithm must work for an unknown size $N$.
+- **Hint:** The algorithm contains **booleans**.
+- **Context:** The teacher mentioned this was from a PhD algorithms exam.
 
-## 2. The Language
-We primarily use **C++**, with an additional investigation into **C** and theoretical algorithmic models.
-
-## 3. How I Searched & Road Map
-Documented in the [Research Map](file:///home/wsm/Desktop/Selection%20Sort%20Project/2%20-%20Research%20map.md) and [Mistakes & Lessons](file:///home/wsm/Desktop/Selection%20Sort%20Project/6%20-%20Mistakes%20and%20Lessons.md).
+Full details are documented in [1 - The Problem.md](file:///home/wsm/Desktop/Selection%20Sort%20Project/1%20-%20The%20Problem.md).
 
 ---
 
-## 4. Progressive Programs & Evolutionary Path
+## 2. The Research Journey & Evolution of Code
 
-**1. [version1.cpp](file:///home/wsm/Desktop/Selection%20Sort%20Project/4%20-%20The%20Program/version1.cpp)** `[state:failed]` `[rules:recursion]`
-- **What I did:** Repetition using mutual function calls (Function A calls Function B, which calls Function A).
-- **Why it failed:** Even without a function directly calling itself, any cycle in the call stack constitutes indirect recursion. Forbidden!
+Documented across [2 - Research map.md](file:///home/wsm/Desktop/Selection%20Sort%20Project/2%20-%20Research%20map.md) and the [Daily Notes](file:///home/wsm/Desktop/Selection%20Sort%20Project/3%20-%20Daily%20Notes).
 
-**2. [version2.cpp](file:///home/wsm/Desktop/Selection%20Sort%20Project/4%20-%20The%20Program/version2.cpp)** `[state:works]` `[rules:ok]`
-- **What I did:** Proved the concept of loop-free repetition in C++ using object constructors (`new loop2[n]`).
-- **What I learned:** Creating an array of $N$ objects forces the C++ runtime to invoke the default constructor $N$ times.
+### Phase 1: Sequential Simulation in C++
+- **[version1.cpp](file:///home/wsm/Desktop/Selection%20Sort%20Project/4%20-%20The%20Program/version1.cpp)** `[state:failed]`
+  Tried mutual function calls (Function A calls B, B calls A). Failed because mutual calls form a cycle on the call stack, which is indirect recursion.
+- **[version2.cpp](file:///home/wsm/Desktop/Selection%20Sort%20Project/4%20-%20The%20Program/version2.cpp)** `[state:works]`
+  Discovered the C++ constructor trick: `new T[n]` forces the runtime to call the constructor $N$ times.
+- **[version3.cpp](file:///home/wsm/Desktop/Selection%20Sort%20Project/4%20-%20The%20Program/version3.cpp)** `[state:works]`
+  Simulated nested loops by having an `Outer` constructor instantiate `Inner` constructors with variable size ($n - i - 1$).
+- **[version4.cpp](file:///home/wsm/Desktop/Selection%20Sort%20Project/4%20-%20The%20Program/version4.cpp)** `[state:works]`
+  First working Selection Sort using constructors and boolean `(arr[j] < arr[min_index])`. Weakness: heap memory leak and imperfect `swap`.
+- **[version5.cpp](file:///home/wsm/Desktop/Selection%20Sort%20Project/4%20-%20The%20Program/version5.cpp)** `[state:works]`
+  Fixed memory leaks using `delete[] new Inner[...]`, cleaned `swap(x, y)`, and added AI review comments.
 
-**3. [version3.cpp](file:///home/wsm/Desktop/Selection%20Sort%20Project/4%20-%20The%20Program/version3.cpp)** `[state:works]` `[rules:ok]`
-- **What I did:** Simulated nested loops by having the outer constructor dynamically create an array of inner constructors with variable sizes ($n - i - 1$).
-- **What I learned:** Dynamic sizing works smoothly inside constructors without loops.
+### Phase 2: The Breakthrough — The "Floor Tiles" Revelation & The Boolean Comparison Matrix
+While walking down the university hallway, looking at the square floor tiles (*le carrelage*) forming an $N \times N$ grid, a new perspective emerged:
+> Why search for the minimum step-by-step?
+> What if we compare all elements at once on an $N \times N$ grid of booleans?
+> The number of `true` values in row $i$ is the exact final rank of element $A[i]$!
 
-**4. [version4.cpp](file:///home/wsm/Desktop/Selection%20Sort%20Project/4%20-%20The%20Program/version4.cpp)** `[state:works]` `[rules:ok]`
-- **What I did:** First full working Selection Sort combining constructors with the boolean condition `(arr[j] < arr[min_index])`.
-- **Identified weaknesses:** Had a memory leak (missing `delete[]`) and still used a `for` loop in `main()` for printing.
+Research confirmed this is formally known as **Parallel Enumeration / Rank Sort using a Boolean Comparison Matrix**—a classic PhD exam problem in PRAM / parallel models!
 
-**5. [version5.cpp](file:///home/wsm/Desktop/Selection%20Sort%20Project/4%20-%20The%20Program/version5.cpp)** `[state:works]` `[rules:ok]`
-- **What I did:** Fixed the memory leak using `delete[] new Inner[...]`, cleaned up `swap(x, y)` references, and handled edge cases ($N \le 1$).
-
-**6. [final_version.cpp](file:///home/wsm/Desktop/Selection%20Sort%20Project/4%20-%20The%20Program/final_version.cpp)** `[state:final]` `[rules:ok]`
-- **What I did:** Added a constructor-based `Printer` struct, eliminating 100% of loops across the entire file (both sorting and printing).
-- **Result:** Fully memory-safe, supports all edge cases, zero compiler warnings.
-
-**7. Alternative C Solution: [alternative_c_setjmp.c](file:///home/wsm/Desktop/Selection%20Sort%20Project/4%20-%20The%20Program/alternative_c_setjmp.c)** `[state:works]` `[rules:ok]`
-- **What I did:** Implemented the algorithm in pure C using `<setjmp.h>` (`setjmp` and `longjmp`) with booleans.
-- **Why it matters:** If the teacher meant pure C (where constructors do not exist), `longjmp` is the standard library mechanism for non-local control flow jumps without `goto`.
+- **[version6_matrix_concept.cpp](file:///home/wsm/Desktop/Selection%20Sort%20Project/4%20-%20The%20Program/version6_matrix_concept.cpp)** `[state:works]`
+  Prototype of Boolean Comparison Matrix sort. Worked for distinct elements.
+- **[version7_matrix_clean.cpp](file:///home/wsm/Desktop/Selection%20Sort%20Project/4%20-%20The%20Program/version7_matrix_clean.cpp)** `[state:works]`
+  Handled duplicates using tie-breaker condition `(arr[i] == arr[j]) && (i > j)`. Handled edge cases ($N \le 1$). Simple arrays, no `std::vector`.
+- **[final_matrix_sort.cpp](file:///home/wsm/Desktop/Selection%20Sort%20Project/4%20-%20The%20Program/final_matrix_sort.cpp)** `[state:final]`
+  The ultimate master program: zero loops in sorting AND zero loops in printing (`MatrixPrinter`), zero memory leaks, passed all test cases.
 
 ---
 
-## 5. Tests
+## 3. The Theoretical Solution: General Pseudo-code
 
-**Program:** `4 - The Program/final_version.cpp`  
-**Compiler:** `g++ -std=c++17 -Wall -Wextra`
+The complete theoretical explanation and pseudo-code are detailed in:  
+👉 **[The PhD Solution - Pseudo-code.md](file:///home/wsm/Desktop/Selection%20Sort%20Project/The%20PhD%20Solution%20-%20Pseudo-code.md)**
 
-Detailed test log available in [5 - Tests.md](file:///home/wsm/Desktop/Selection%20Sort%20Project/5%20-%20Tests.md).
+### Mathematical Formula:
+$$B[i][j] = (A[i] > A[j]) \lor (A[i] == A[j] \land i > j)$$
+$$\text{Rank}(i) = \sum_{j=0}^{N-1} B[i][j]$$
+$$\text{Sorted}[\text{Rank}(i)] = A[i]$$
 
-| # | Input | Expected | Output | Result |
+### General Pseudo-code:
+```pascal
+Algorithm BooleanMatrixSort(A, N)
+1. For all (i, j) in parallel: B[i][j] <- (A[i] > A[j]) OR (A[i] == A[j] AND i > j)
+2. For each i in parallel:     Rank[i] <- Sum(B[i][0..N-1])
+3. For each i in parallel:     Sorted[Rank[i]] <- A[i]
+Return Sorted
+```
+
+---
+
+## 4. Tests and Verification
+
+Program: `final_matrix_sort.cpp`  
+Compiler: `g++ -std=c++17 -Wall -Wextra`
+
+Detailed logs in [5 - Tests.md](file:///home/wsm/Desktop/Selection%20Sort%20Project/5%20-%20Tests.md).
+
+| # | Input | Expected Output | Actual Output | Status |
 |---|---|---|---|---|
 | 1 | `5 2 9 1 7` | `1 2 5 7 9` | `1 2 5 7 9` | **PASS** |
 | 2 | `42` (single element) | `42` | `42` | **PASS** |
-| 3 | `3 3 1 2` (repeated values) | `1 2 3 3` | `1 2 3 3` | **PASS** |
-| 4 | `9 8 7 6 5 4` (reverse order) | `4 5 6 7 8 9` | `4 5 6 7 8 9` | **PASS** |
-| 5 | `3 -1 -5 0` (negative numbers) | `-5 -1 0 3` | `-5 -1 0 3` | **PASS** |
+| 3 | `3 3 1 2 3` (duplicates) | `1 2 3 3 3` | `1 2 3 3 3` | **PASS** |
+| 4 | `9 8 7 6 5 4` (reversed) | `4 5 6 7 8 9` | `4 5 6 7 8 9` | **PASS** |
+| 5 | `3 -1 -5 0 2` (negatives) | `-5 -1 0 2 3` | `-5 -1 0 2 3` | **PASS** |
 | 6 | `[]` (empty array) | `[Empty array]` | `[Empty array]` | **PASS** |
 
 ---
 
-## 6. Limits and Honest Discussion (What is really happening?)
+## 5. Honest Discussion & Conclusions
 
-1. **Did we truly eliminate repetition?**
-   No. Computationally, sorting an unsorted dynamic array of $N$ items requires $\Omega(N \log N)$ or $O(N^2)$ comparisons. We did not eliminate iteration; we delegated the loop to the **C++ runtime / memory allocator**, which executes a loop behind the scenes when initializing array elements.
-2. **What might the PhD question have intended?**
-   - **Possibility A (C++ Language Trick):** The Constructor lifecycle trick (our primary solution).
-   - **Possibility B (C Low-Level Jumping):** Using `setjmp`/`longjmp` with boolean guards.
-   - **Possibility C (Theoretical Pseudo-code / Boolean Comparison Matrix):** In algorithmic theory, sorting can be represented without sequential loops as an $N \times N$ Boolean Matrix:
-     $$B[i][j] = (A[i] > A[j])$$
-     The sum of booleans in row $i$ gives the exact final index of element $A[i]$.
-
----
-
-## 7. Sources
-Full details in [7 - Sources and AI Questions.md](file:///home/wsm/Desktop/Selection%20Sort%20Project/7%20-%20Sources%20and%20AI%20Questions.md).
-- GeeksforGeeks & Microsoft Learn: Array constructor repetition mechanisms.
-- Cppreference: Standard object lifetime rules.
-- AI Assistant: Pair programming, bug detection, memory leak resolution, and code review.
+1. **Why Pseudo-code is the General Solution:**
+   In **Pseudo-code**, the algorithm is general and needs no programming tricks, because mathematical set operations evaluate all comparisons simultaneously.
+2. **The Role of C++ Constructors:**
+   In practical sequential C++, the CPU needs a mechanism to trigger comparisons. Using object constructors (`new MatrixCell[n]`) bridges the gap, fulfilling the constraint of no `for`, `while`, `do`, `recursion`, or `goto`.
+3. **The Teacher's Hint:**
+   The hint **"contains booleans"** is the core key: every entry in the $N \times N$ matrix is a boolean comparison that directly dictates the element's position.
