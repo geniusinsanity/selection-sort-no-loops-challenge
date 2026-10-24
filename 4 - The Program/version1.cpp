@@ -1,55 +1,34 @@
-// Version 2: selection sort with no for/while/do, no recursion, no goto.
-// The array and its size are written in the code.
-// Repetition comes from building an array of objects: new T[n] calls T() n times.
-// The boolean (a[j] < a[mn]) decides which element is the smallest.
+// Version 1: First attempt to repeat without loops
+// Idea: Function A calls Function B, and Function B calls Function A
+// State: FAILED (Violates rules: Indirect / Mutual Recursion)
+// Lesson: Even if a function doesn't call itself directly, 
+// a cycle of function calls is still recursion on the call stack!
+
 #include <iostream>
-void swap(int &x , int &y);
-void selectionSort(int arr[], int size);
 
-int *arr_ptr, n, i, j, min_index;
+int arr[] = {5, 2, 9, 1, 7};
+int n = 5;
+int i = 0, j = 0, min_idx = 0;
 
-struct Inner {                 // inner "loop": runs n-i-1 times
-    Inner() {
-        j++;
-        if(arr_ptr[j]<arr_ptr[min_index]){
-            min_index=j;
+void stepB();
+
+void stepA() {
+    if (j < n) {
+        if (arr[j] < arr[min_idx]) {
+            min_idx = j;
         }
-        // min_index = (arr_ptr[j] < arr_ptr[min_index]) ? j : min_index;   // boolean decision
+        j++;
+        stepB(); // calls B
     }
-};
+}
 
-struct Outer {                 // outer "loop": runs n times
-    Outer() {
-        min_index = i;
-        j = i;
-        new Inner[n - i - 1];
-        swap(arr_ptr[i],arr_ptr[min_index]);
-        i++;
-    }
-};
-
-
+void stepB() {
+    stepA(); // calls A back (creates a cycle!)
+}
 
 int main() {
-    int array[] = {2, 5, 333, 1, 6, 4,12,93,0,3,3,23,54,200};
-    int size =sizeof(array)/sizeof(array[0]);
-
-    selectionSort(array, size);
-    for(int i=0;i<size;i++){
-        std::cout<<array[i]<<" ";
-    }
-    // printArray(array, size);
-}
-
-void selectionSort(int arr[], int size) {   // sorts the array in place
-    arr_ptr = arr;
-    n = size;
-    i = 0;                                 // reset, so it works many times
-    new Outer[n];
-}
-
-void swap(int &x,int &y){
-    int temp = arr_ptr[i];
-    arr_ptr[i] = arr_ptr[min_index];
-    arr_ptr[min_index] = temp;
+    std::cout << "Attempting repetition with mutual function calls..." << std::endl;
+    // This is indirect recursion! The teacher and compiler will reject this as recursion.
+    // That's why version 1 failed.
+    return 0;
 }
