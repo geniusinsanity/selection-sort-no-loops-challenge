@@ -9,7 +9,7 @@
 
 void selectionSort(int arr[], int size);
 void printArray(int arr[], int size);
-void cleanSwap(int &x, int &y);
+void swap(int &x, int &y);
 
 // Global state for communication between constructors
 int *arr_ptr = nullptr;
@@ -41,7 +41,7 @@ struct Outer {
             delete[] new Inner[remaining]; // Run inner loop and free memory
         }
 
-        cleanSwap(arr_ptr[i], arr_ptr[min_index]);
+        swap(arr_ptr[i], arr_ptr[min_index]);
         i++;
     }
 };
@@ -73,7 +73,7 @@ void selectionSort(int arr[], int size) {
     delete[] new Outer[n];
 }
 
-void cleanSwap(int &x, int &y) {
+void swap(int &x, int &y) {
     int temp = x;
     x = y;
     y = temp;

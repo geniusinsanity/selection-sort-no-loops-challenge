@@ -2,14 +2,14 @@
 // Based on review and AI feedback:
 // 1. FIXED MEMORY LEAK: Replaced 'new Inner[count]' with 'delete[] new Inner[count]'.
 //    This creates the objects (running their constructors), and then immediately frees the memory!
-// 2. FIXED SWAP: Cleaned up swap(x, y) to actually use the references passed to it.
+// 2. FIXED SWAP: ed up swap(x, y) to actually use the references passed to it.
 // 3. FIXED REUSABILITY: Reset all counters properly so selectionSort can be called multiple times.
 // 4. EDGE CASES: Added checks for n <= 1 so it doesn't allocate negative or unnecessary objects.
 
 #include <iostream>
 
 void selectionSort(int arr[], int size);
-void cleanSwap(int &x, int &y);
+void Swap(int &x, int &y);
 
 // Global pointers and state variables for constructor communication
 int *arr_ptr;
@@ -35,11 +35,11 @@ struct Outer {
         
         // AI Note: If remaining > 0, allocate and immediately delete to prevent memory leak!
         if (remaining > 0) {
-            delete[] new Inner[remaining]; // constructor runs 'remaining' times, then deletes cleanly
+            delete[] new Inner[remaining]; // constructor runs 'remaining' times, then deletes ly
         }
 
         // Swap the found minimum element with current position
-        cleanSwap(arr_ptr[i], arr_ptr[min_index]);
+        Swap(arr_ptr[i], arr_ptr[min_index]);
         i++;
     }
 };
@@ -72,7 +72,7 @@ void selectionSort(int arr[], int size) {
     delete[] new Outer[n];
 }
 
-void cleanSwap(int &x, int &y) {
+void Swap(int &x, int &y) {
     int temp = x;
     x = y;
     y = temp;
