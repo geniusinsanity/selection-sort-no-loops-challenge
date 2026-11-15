@@ -1,9 +1,0 @@
-# Compiled binaries
-*.out
-*.o
-*.exe
-/4 - The Program/version2
-/4 - The Program/final_version
-/4 - The Program/version*
-!/4 - The Program/*.cpp
-!/4 - The Program/*.h
